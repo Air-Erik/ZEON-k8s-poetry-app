@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-config
+  namespace: test-app
+data:
+  docker_username: "airerik"  # Замените на ваш Docker Hub username

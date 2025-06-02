@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-db-app
+  namespace: test-app
+  labels:
+    app: python-db-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-db-app
+  template:
+    metadata:
+      labels:
+        app: python-db-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: python-db-app
+        image: python-db-app
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+            name: db-credentials
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
